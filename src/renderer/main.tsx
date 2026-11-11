@@ -57,12 +57,21 @@ import {
   rowFrom,
   safeName,
   validateProject,
+  validateLayout,
   type Project,
   type Design,
   type Row,
   type LabelLayout,
   type ExportFormat,
 } from "../core/model";
+import {
+  customPapersFor,
+  saveCustomPaper,
+  updateCustomPaper,
+  removeCustomPaper,
+  CustomPaperError,
+  type CustomPaper,
+} from "../core/customPapers";
 import { encode } from "../core/barcode";
 import {
   parseTable,
@@ -293,6 +302,60 @@ function App() {
     change((p) => ({ ...p, design: { ...p.design, ...patch } }));
   const layout = (patch: Partial<LabelLayout>) =>
     change((p) => ({ ...p, layout: { ...p.layout, ...patch } }));
+  // The layout picker shows the last choice (a built-in preset, or a size the
+  // person saved by name) until a field is edited by hand.
+  const [layoutChoice, setLayoutChoice] = useState("");
+  const [savedLayouts, setSavedLayouts] = useState<CustomPaper<LabelLayout>[]>(
+    () => customPapersFor<LabelLayout>("labels"),
+  );
+  const [layoutName, setLayoutName] = useState("");
+  const savedLayoutKey = (p: CustomPaper<LabelLayout>) => `saved:${p.id}`;
+  const selectedSavedLayout = savedLayouts.find(
+    (p) => savedLayoutKey(p) === layoutChoice,
+  );
+  const reloadSavedLayouts = () =>
+    setSavedLayouts(customPapersFor<LabelLayout>("labels"));
+  const withSavedLayouts = (fn: () => void) =>
+    run(() => {
+      try {
+        fn();
+      } catch (e) {
+        throw e instanceof CustomPaperError
+          ? Error(homeText(language, e.key))
+          : e;
+      }
+    });
+  const applySavedLayout = (p: CustomPaper<LabelLayout>) =>
+    withSavedLayouts(() => {
+      layout(validateLayout({ ...p.paper, start: 0 }));
+      setPage(0);
+      setLayoutChoice(savedLayoutKey(p));
+    });
+  const saveLayout = () =>
+    withSavedLayouts(() => {
+      const saved = saveCustomPaper<LabelLayout>({
+        name: layoutName,
+        tab: "labels",
+        paper: { ...validateLayout(project.layout), start: 0 },
+      });
+      reloadSavedLayouts();
+      setLayoutName("");
+      setLayoutChoice(savedLayoutKey(saved));
+    });
+  const renameLayout = () =>
+    withSavedLayouts(() => {
+      if (!selectedSavedLayout) return;
+      updateCustomPaper(selectedSavedLayout.id, { name: layoutName });
+      reloadSavedLayouts();
+      setLayoutName("");
+    });
+  const deleteLayout = () =>
+    withSavedLayouts(() => {
+      if (!selectedSavedLayout) return;
+      removeCustomPaper(selectedSavedLayout.id);
+      reloadSavedLayouts();
+      setLayoutChoice("");
+    });
   const undoAction = () => {
     const p = undo.current.pop();
     if (p) {
@@ -865,6 +928,7 @@ function App() {
         onChange={(e) => {
           layout({ [key]: Number(e.target.value) });
           setPage(0);
+          setLayoutChoice("");
         }}
       />
     </label>
@@ -2159,13 +2223,20 @@ function App() {
                   <span>{L("Start with a layout", "使用预设布局")}</span>
                   <select
                     aria-label={L("Label preset")}
-                    defaultValue=""
+                    data-testid="labels-layout"
+                    value={layoutChoice}
                     onChange={(e) => {
-                      if (e.target.value) {
-                        const { name, ...l } = presets[Number(e.target.value)];
+                      const value = e.target.value;
+                      const saved = savedLayouts.find(
+                        (p) => savedLayoutKey(p) === value,
+                      );
+                      if (saved) applySavedLayout(saved);
+                      else if (value) {
+                        const { name, ...l } = presets[Number(value)];
                         layout(l);
                         setPage(0);
-                      }
+                        setLayoutChoice(value);
+                      } else setLayoutChoice("");
                     }}
                   >
                     <option value="">{L("Custom layout", "自定义布局")}</option>
@@ -2174,6 +2245,15 @@ function App() {
                         {L(p.name)}
                       </option>
                     ))}
+                    {savedLayouts.length > 0 && (
+                      <optgroup label={homeText(language, "myPapers")}>
+                        {savedLayouts.map((p) => (
+                          <option value={savedLayoutKey(p)} key={p.id}>
+                            {p.name} · {p.paper.width} × {p.paper.height} mm
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
                   </select>
                 </label>
                 <div className="subheading">{L("Paper · mm", "纸张 · mm")}</div>
@@ -2202,6 +2282,44 @@ function App() {
                   )}
                   {layoutField(L("Horizontal gap", "水平间距"), "gapX")}
                   {layoutField(L("Vertical gap", "垂直间距"), "gapY")}
+                </div>
+                <label className="field">
+                  <span>{homeText(language, "paperName")}</span>
+                  <input
+                    type="text"
+                    data-testid="labels-layout-name"
+                    maxLength={60}
+                    value={layoutName}
+                    placeholder={selectedSavedLayout?.name}
+                    onChange={(e) => setLayoutName(e.target.value)}
+                  />
+                </label>
+                <div className="button-row layout-actions">
+                  <button
+                    className="secondary"
+                    type="button"
+                    onClick={saveLayout}
+                  >
+                    {homeText(language, "savePaper")}
+                  </button>
+                  {selectedSavedLayout && (
+                    <>
+                      <button
+                        className="secondary"
+                        type="button"
+                        onClick={renameLayout}
+                      >
+                        {homeText(language, "renamePaper")}
+                      </button>
+                      <button
+                        className="secondary"
+                        type="button"
+                        onClick={deleteLayout}
+                      >
+                        {homeText(language, "deletePaper")}
+                      </button>
+                    </>
+                  )}
                 </div>
                 <label className="field">
                   <span>{L("Skip used labels", "跳过已使用的标签")}</span>

@@ -901,6 +901,10 @@ h1 {
   align-items: center;
   gap: 10px;
 }
+.layout-actions {
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
 .batch-bottom {
   display: flex;
   align-items: center;
