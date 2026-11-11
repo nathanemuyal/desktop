@@ -16,7 +16,7 @@ Installers are not publisher-signed; Mac packages are not notarized. The operati
 - CSV / TSV / text import and pasted spreadsheets with column mapping, leading-zero preservation, per-row quantities, names, formats and captions.
 - Exact integer sequences with start, step, count, zero padding, prefix/suffix and shuffled unique values.
 - Editable batches, selection, error reporting, pagination, background validation and cancellable ZIP exports.
-- Label layouts for A4, US Letter and thermal paper. Custom dimensions, margins, gutters, rows/columns, print order and partially used sheets.
+- Label layouts for A4, US Letter and thermal paper. Custom dimensions, margins, gutters, rows/columns, print order and partially used sheets. A custom size can be saved by name and reused from the paper list on later launches; saved sizes stay on this computer.
 - Real-size label preview, vector PDF export and native printer handoff. Oversized barcodes are flagged instead of silently resized.
 - PNG, SVG, JPEG, GIF, BMP and uncompressed RGB TIFF. PNG/JPEG/BMP/TIFF carry physical resolution metadata; GIF has no standard DPI metadata.
 - Module width aligned to printer dots, bar height, quiet zones, rotation, colors, captions, text settings and expert encoder options.
