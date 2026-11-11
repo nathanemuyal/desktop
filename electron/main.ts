@@ -24,6 +24,7 @@ import { validateProject, type Project } from "../src/core/model";
 import { languages, negotiateLanguage, translate } from "../src/i18n";
 let main: BrowserWindow;
 let saving = Promise.resolve();
+let savingPapers = Promise.resolve();
 const root = path.join(__dirname, "../dist");
 const testMode = !!process.env.BARCODEMATE_TEST_DIR;
 if (testMode) app.setPath("userData", process.env.BARCODEMATE_TEST_DIR!);
@@ -391,6 +392,22 @@ app.whenReady().then(async () => {
       throw Error("Invalid project library.");
     const projects = values.map(validateProject);
     await atomic(dataFile("library.json"), JSON.stringify(projects));
+  });
+  // Named paper sizes, kept beside the library so an update or a reset of web
+  // storage does not lose them. The renderer validates each entry's shape.
+  safeHandler("papers:load", async () => {
+    const data = await readJSON(dataFile("custom-papers.json"));
+    return Array.isArray(data) ? data : [];
+  });
+  safeHandler("papers:save", (values: unknown) => {
+    const text = JSON.stringify(values);
+    if (!Array.isArray(values) || values.length > 10000 || text.length > 5e6)
+      // Never shown: the renderer keeps its own copy and ignores a refusal.
+      return Promise.reject(new RangeError("papers"));
+    savingPapers = savingPapers
+      .catch(() => {})
+      .then(() => atomic(dataFile("custom-papers.json"), text));
+    return savingPapers;
   });
   safeHandler("recover", async () => {
     const p = await readJSON(dataFile("recovery.json"));

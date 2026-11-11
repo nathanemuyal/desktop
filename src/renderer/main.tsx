@@ -69,6 +69,7 @@ import {
   saveCustomPaper,
   updateCustomPaper,
   removeCustomPaper,
+  restoreCustomPapers,
   CustomPaperError,
   type CustomPaper,
 } from "../core/customPapers";
@@ -3257,4 +3258,8 @@ function App() {
     </div>
   );
 }
-createRoot(document.getElementById("root")!).render(<App />);
+// The saved paper sizes are read by the first render, so bring them back from
+// their file copy before it. This never rejects and does nothing on the web.
+restoreCustomPapers().finally(() =>
+  createRoot(document.getElementById("root")!).render(<App />),
+);

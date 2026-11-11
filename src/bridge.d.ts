@@ -44,6 +44,8 @@ export interface DesktopAPI {
   saveProject(project: Project): Promise<string | null>;
   loadLibrary(): Promise<Project[]>;
   saveLibrary(projects: Project[]): Promise<void>;
+  loadPapers(): Promise<unknown[]>;
+  savePapers(papers: unknown[]): Promise<void>;
   recover(): Promise<Project | null>;
   autosave(project: Project): Promise<void>;
   importTable(): Promise<{ name: string; text: string } | null>;

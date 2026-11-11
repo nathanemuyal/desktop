@@ -1,5 +1,5 @@
 import { test, expect, _electron as electron } from "@playwright/test";
-import { mkdtemp } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { settled } from "./profile";
@@ -35,7 +35,10 @@ test("saved paper sizes persist across launches in warehouse, home and labels", 
       p.locator("[data-testid=warehouse-paper] optgroup"),
     ).toHaveCount(0);
     // A roll printer, so the 80 mm wide stock below fits a single column.
-    await p.getByRole("button", { name: /Thermal printer/ }).first().click();
+    await p
+      .getByRole("button", { name: /Thermal printer/ })
+      .first()
+      .click();
     await p.locator(".wh-paper-settings summary").click();
     await p.locator("[data-field=width] input").fill("76");
     await p.locator("[data-field=pageWidth] input").fill("80");
@@ -72,11 +75,17 @@ test("saved paper sizes persist across launches in warehouse, home and labels", 
     await expect(p.locator("[data-field=width] input")).toHaveValue("76");
     await expect(p.locator("[data-field=pageWidth] input")).toHaveValue("80");
     // Sizes saved for a roll printer are not offered for sheets.
-    await p.getByRole("button", { name: /Office printer/ }).first().click();
+    await p
+      .getByRole("button", { name: /Office printer/ })
+      .first()
+      .click();
     await expect(
       p.locator("[data-testid=warehouse-paper] optgroup"),
     ).toHaveCount(0);
-    await p.getByRole("button", { name: /Thermal printer/ }).first().click();
+    await p
+      .getByRole("button", { name: /Thermal printer/ })
+      .first()
+      .click();
     await expect(
       p.locator("[data-testid=warehouse-paper] optgroup"),
     ).toHaveCount(1);
@@ -181,6 +190,30 @@ test("saved paper sizes persist across launches in warehouse, home and labels", 
       layoutSelect.locator("option", { hasText: "Narrow 60" }),
     ).toHaveCount(1);
     expect(errors).toEqual([]);
+  } finally {
+    await app.close();
+  }
+
+  // The list is also kept in a file beside the library. With web storage
+  // gone, as after a reset by an update or a cleared profile, it comes back.
+  const kept = JSON.parse(
+    await readFile(path.join(temp, "custom-papers.json"), "utf8"),
+  );
+  expect(kept.map((p: { name: string }) => p.name)).toEqual(["Narrow 60"]);
+  await rm(path.join(temp, "Local Storage"), { recursive: true, force: true });
+  app = await launch();
+  try {
+    const p = await app.firstWindow();
+    await p.locator("#language-select").selectOption("en");
+    await p.locator("[data-workspace=labels]").click();
+    const layoutSelect = p.getByTestId("labels-layout");
+    await expect(
+      layoutSelect.locator("option", { hasText: "Narrow 60" }),
+    ).toHaveCount(1);
+    await layoutSelect.selectOption({ label: "Narrow 60 · 60 × 38.1 mm" });
+    await expect(p.getByLabel("Label width", { exact: true })).toHaveValue(
+      "60",
+    );
   } finally {
     await app.close();
   }

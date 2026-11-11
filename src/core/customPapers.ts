@@ -54,21 +54,61 @@ export function loadCustomPapers(): CustomPaper[] {
   try {
     const raw = localStorage.getItem(CUSTOM_PAPERS_STORE);
     if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    const seen = new Set<string>();
-    const list: CustomPaper[] = [];
-    for (const item of parsed) {
-      const entry = validEntry(item);
-      if (entry && !seen.has(entry.id)) {
-        seen.add(entry.id);
-        list.push(entry);
-      }
-    }
-    return list;
+    return validList(JSON.parse(raw));
   } catch {
     return [];
   }
+}
+function validList(parsed: unknown): CustomPaper[] {
+  if (!Array.isArray(parsed)) return [];
+  const seen = new Set<string>();
+  const list: CustomPaper[] = [];
+  for (const item of parsed) {
+    const entry = validEntry(item);
+    if (entry && !seen.has(entry.id)) {
+      seen.add(entry.id);
+      list.push(entry);
+    }
+  }
+  return list;
+}
+// The desktop app also keeps the list in a file beside the project library,
+// so the sizes outlive anything that empties web storage: a reinstall that
+// resets it, a cleared cache, a changed page origin in a later version.
+type FileCopy = {
+  loadPapers?: () => Promise<unknown>;
+  savePapers?: (list: CustomPaper[]) => Promise<unknown>;
+};
+const fileCopy = () => (globalThis as { desktop?: FileCopy }).desktop;
+const copyToFile = (list: CustomPaper[]) => {
+  try {
+    void fileCopy()
+      ?.savePapers?.(list)
+      ?.catch(() => {});
+  } catch {}
+};
+/**
+ * Run once before the first render. Web storage that has never held the list
+ * is refilled from the file; otherwise web storage is the truth and the file
+ * is brought up to date with it.
+ */
+export async function restoreCustomPapers(): Promise<void> {
+  const desktop = fileCopy();
+  if (!desktop?.loadPapers) return;
+  try {
+    const kept = validList(await desktop.loadPapers());
+    let raw: string | null = null;
+    try {
+      raw = localStorage.getItem(CUSTOM_PAPERS_STORE);
+    } catch {}
+    if (raw === null) {
+      if (kept.length)
+        localStorage.setItem(CUSTOM_PAPERS_STORE, JSON.stringify(kept));
+      return;
+    }
+    const current = loadCustomPapers();
+    if (JSON.stringify(current) !== JSON.stringify(kept)) copyToFile(current);
+  } catch {}
 }
 /** The saved sizes one selector offers: its tab, and its printer where that matters. */
 export function customPapersFor<P extends object = Record<string, unknown>>(
@@ -85,6 +125,7 @@ function write(list: CustomPaper[]) {
   } catch {
     throw new CustomPaperError("paperStoreError");
   }
+  copyToFile(list);
 }
 const sameName = (a: string, b: string) =>
   a.trim().localeCompare(b.trim(), undefined, { sensitivity: "accent" }) === 0;

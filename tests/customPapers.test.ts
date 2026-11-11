@@ -204,3 +204,42 @@ test("damaged storage is read as empty and bad entries are dropped", () => {
       e instanceof CustomPaperError && e.key === "paperStoreError",
   );
 });
+
+test("the desktop file copy follows every change and refills emptied web storage", async () => {
+  const { restoreCustomPapers } = await import("../src/core/customPapers");
+  let file: unknown = [];
+  const desktop = {
+    loadPapers: async () => file,
+    savePapers: async (list: unknown) => {
+      file = JSON.parse(JSON.stringify(list));
+    },
+  };
+  (globalThis as { desktop?: unknown }).desktop = desktop;
+  try {
+    const a = saveCustomPaper({ name: "Kept", tab: "home", paper: { w: 1 } });
+    saveCustomPaper({ name: "Gone", tab: "home", paper: { w: 2 } });
+    removeCustomPaper(loadCustomPapers()[1].id);
+    assert.deepEqual(file, [a]);
+    // Web storage that no longer holds the list is refilled from the file.
+    memory.clear();
+    await restoreCustomPapers();
+    assert.deepEqual(loadCustomPapers(), [a]);
+    // A list emptied on purpose stays empty, and the file follows it.
+    removeCustomPaper(a.id);
+    file = [a];
+    await restoreCustomPapers();
+    assert.deepEqual(loadCustomPapers(), []);
+    assert.deepEqual(file, []);
+    // An unreadable or failing file never blocks the app from starting.
+    file = "not a list";
+    memory.clear();
+    await restoreCustomPapers();
+    desktop.loadPapers = async () => {
+      throw new Error("disk");
+    };
+    await restoreCustomPapers();
+    assert.deepEqual(loadCustomPapers(), []);
+  } finally {
+    delete (globalThis as { desktop?: unknown }).desktop;
+  }
+});
