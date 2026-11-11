@@ -13,12 +13,21 @@ import {
   normalizePaper,
   paperMargins,
   setOppositeMargin,
+  validPaper,
   STORE,
   WarehouseError,
   type WarehouseProject,
   type Paper,
   type Item,
 } from "./core";
+import {
+  customPapersFor,
+  saveCustomPaper,
+  updateCustomPaper,
+  removeCustomPaper,
+  CustomPaperError,
+  type CustomPaper,
+} from "../core/customPapers";
 import { RETAIL_STORE, printableItems } from "../retail/model";
 import { retailText, type RetailKey } from "../retail/i18n";
 import { RetailEditor, retailSample } from "../retail/RetailEditor";
@@ -142,6 +151,22 @@ export function Warehouse({
   }, [editorWidth]);
   const paperSettings = useRef<HTMLDetailsElement>(null);
   useEffect(() => setCustomPaper(false), [project.paper]);
+  // Sizes people named and kept. The list is per tab, and the selector shows
+  // only those saved for the current printer family.
+  const customTab = retail ? "retail" : "warehouse";
+  const paperPrinter = project.printer === "office" ? "office" : "roll";
+  const [savedPapers, setSavedPapers] = useState<CustomPaper<Paper>[]>(() =>
+    customPapersFor<Paper>(customTab),
+  );
+  const reloadSavedPapers = () =>
+    setSavedPapers(customPapersFor<Paper>(customTab));
+  const [paperName, setPaperName] = useState("");
+  const printerPapers = savedPapers.filter((p) => p.printer === paperPrinter);
+  const samePaper = (a: Paper, b: Paper) =>
+    (Object.keys(presets.a4) as (keyof Paper)[]).every((k) => a[k] === b[k]);
+  const selectedSaved = customPaper
+    ? undefined
+    : printerPapers.find((p) => samePaper(p.paper, project.paper));
   const frame = useRef<HTMLIFrameElement>(null),
     surface = useRef<HTMLDivElement>(null),
     backup = useRef<HTMLInputElement>(null),
@@ -168,7 +193,7 @@ export function Warehouse({
   }, [screenScale]);
   const fail = (e: unknown) => {
     const key =
-      e instanceof WarehouseError
+      e instanceof WarehouseError || e instanceof CustomPaperError
         ? e.key
         : e instanceof Error
           ? Object.keys({
@@ -420,6 +445,57 @@ export function Warehouse({
       offsetX: 0,
       offsetY: 0,
     });
+  };
+  const applySavedPaper = (id: string) => {
+    const saved = printerPapers.find((p) => p.id === id);
+    if (!saved) return;
+    try {
+      patch({
+        paper: validPaper(saved.paper),
+        start: 0,
+        offsetX: 0,
+        offsetY: 0,
+      });
+    } catch (e) {
+      setNotice(fail(e));
+    }
+  };
+  const savePaper = () => {
+    try {
+      saveCustomPaper<Paper>({
+        name: paperName,
+        tab: customTab,
+        printer: paperPrinter,
+        paper: validPaper(project.paper),
+      });
+      reloadSavedPapers();
+      setPaperName("");
+      setCustomPaper(false);
+      setNotice("");
+    } catch (e) {
+      setNotice(fail(e));
+    }
+  };
+  const renamePaper = () => {
+    if (!selectedSaved) return;
+    try {
+      updateCustomPaper(selectedSaved.id, { name: paperName });
+      reloadSavedPapers();
+      setPaperName("");
+      setNotice("");
+    } catch (e) {
+      setNotice(fail(e));
+    }
+  };
+  const deletePaper = () => {
+    if (!selectedSaved) return;
+    try {
+      removeCustomPaper(selectedSaved.id);
+      reloadSavedPapers();
+      setNotice("");
+    } catch (e) {
+      setNotice(fail(e));
+    }
   };
   const num = (
     key: string,
@@ -1005,7 +1081,8 @@ export function Warehouse({
                         ([_, p]) =>
                           JSON.stringify(normalizePaper(p)) ===
                           JSON.stringify(normalizePaper(project.paper)),
-                      )?.[0] || "custom"
+                      )?.[0] ||
+                      (selectedSaved ? `saved:${selectedSaved.id}` : "custom")
                 }
                 onChange={(e) => {
                   setCustomPaper(e.target.value === "custom");
@@ -1018,9 +1095,20 @@ export function Warehouse({
                       offsetX: 0,
                       offsetY: 0,
                     });
+                  else if (e.target.value.startsWith("saved:"))
+                    applySavedPaper(e.target.value.slice("saved:".length));
                 }}
               >
                 <option value="custom">{t("custom")}</option>
+                {printerPapers.length > 0 && (
+                  <optgroup label={t("myPapers")}>
+                    {printerPapers.map((p) => (
+                      <option key={p.id} value={`saved:${p.id}`}>
+                        {p.name} · {p.paper.width} × {p.paper.height} mm
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
                 {(project.printer === "office"
                   ? ["a4", "letter"]
                   : ["roll-1", "roll-2", "roll-3", "roll-102x152"]
@@ -1104,6 +1192,37 @@ export function Warehouse({
                 </label>
               </div>
               <p className="hm-hint">{t("marginHelp")}</p>
+              <div
+                className="wh-custom-papers"
+                data-testid="warehouse-custom-papers"
+              >
+                <label>
+                  {t("paperName")}
+                  <input
+                    type="text"
+                    data-testid="warehouse-paper-name"
+                    maxLength={60}
+                    value={paperName}
+                    placeholder={selectedSaved?.name}
+                    onChange={(e) => setPaperName(e.target.value)}
+                  />
+                </label>
+                <div className="wh-custom-paper-actions">
+                  <button type="button" onClick={savePaper}>
+                    {t("savePaper")}
+                  </button>
+                  {selectedSaved && (
+                    <>
+                      <button type="button" onClick={renamePaper}>
+                        {t("renamePaper")}
+                      </button>
+                      <button type="button" onClick={deletePaper}>
+                        {t("deletePaper")}
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
             </details>
             <p className="hm-hint">
               {t(project.paper.medium === "roll" ? "rollNote" : "layoutNote")}

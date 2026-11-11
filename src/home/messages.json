@@ -81,7 +81,15 @@
     "offsetError": "Some label content is outside the page. Reduce the adjustment.",
     "newDate": "New date",
     "cancelDate": "Cancel",
-    "backup": "Backups"
+    "backup": "Backups",
+    "myPapers": "My sizes",
+    "paperName": "Size name",
+    "savePaper": "Save as new size",
+    "renamePaper": "Rename",
+    "deletePaper": "Delete",
+    "paperNameError": "Enter a name for this size.",
+    "paperNameTaken": "A saved size with this name already exists.",
+    "paperStoreError": "Could not save this size on this device."
   },
   "zh-Hans": {
     "title": "家庭收纳标签",
@@ -165,7 +173,15 @@
     "offsetError": "部分标签内容超出纸张，请减小偏移量。",
     "newDate": "新日期",
     "cancelDate": "取消",
-    "backup": "备份"
+    "backup": "备份",
+    "myPapers": "我的尺寸",
+    "paperName": "尺寸名称",
+    "savePaper": "保存为新尺寸",
+    "renamePaper": "重命名",
+    "deletePaper": "删除",
+    "paperNameError": "请为此尺寸输入名称。",
+    "paperNameTaken": "已有同名的已保存尺寸。",
+    "paperStoreError": "无法在此设备上保存该尺寸。"
   },
   "zh-Hant": {
     "title": "家庭收納標籤",
@@ -249,7 +265,15 @@
     "offsetError": "部分標籤內容超出紙張，請減小偏移量。",
     "newDate": "新日期",
     "cancelDate": "取消",
-    "backup": "備份"
+    "backup": "備份",
+    "myPapers": "我的尺寸",
+    "paperName": "尺寸名稱",
+    "savePaper": "儲存為新尺寸",
+    "renamePaper": "重新命名",
+    "deletePaper": "刪除",
+    "paperNameError": "請為此尺寸輸入名稱。",
+    "paperNameTaken": "已有同名的已儲存尺寸。",
+    "paperStoreError": "無法在此裝置上儲存該尺寸。"
   },
   "es": {
     "title": "Etiquetas para el hogar",
@@ -333,7 +357,15 @@
     "offsetError": "Parte del contenido queda fuera de la página. Reduce el ajuste.",
     "newDate": "Nueva fecha",
     "cancelDate": "Cancelar",
-    "backup": "Copias de seguridad"
+    "backup": "Copias de seguridad",
+    "myPapers": "Mis tamaños",
+    "paperName": "Nombre del tamaño",
+    "savePaper": "Guardar como tamaño nuevo",
+    "renamePaper": "Renombrar",
+    "deletePaper": "Eliminar",
+    "paperNameError": "Escribe un nombre para este tamaño.",
+    "paperNameTaken": "Ya existe un tamaño guardado con ese nombre.",
+    "paperStoreError": "No se pudo guardar este tamaño en este dispositivo."
   },
   "fr": {
     "title": "Étiquettes pour la maison",
@@ -417,7 +449,15 @@
     "offsetError": "Une partie du contenu dépasse la page. Réduisez le décalage.",
     "newDate": "Nouvelle date",
     "cancelDate": "Annuler",
-    "backup": "Sauvegardes"
+    "backup": "Sauvegardes",
+    "myPapers": "Mes formats",
+    "paperName": "Nom du format",
+    "savePaper": "Enregistrer comme nouveau format",
+    "renamePaper": "Renommer",
+    "deletePaper": "Supprimer",
+    "paperNameError": "Saisissez un nom pour ce format.",
+    "paperNameTaken": "Un format enregistré porte déjà ce nom.",
+    "paperStoreError": "Impossible d’enregistrer ce format sur cet appareil."
   },
   "de": {
     "title": "Etiketten für Zuhause",
@@ -501,7 +541,15 @@
     "offsetError": "Ein Teil des Etiketteninhalts liegt außerhalb der Seite. Verringern Sie den Versatz.",
     "newDate": "Neues Datum",
     "cancelDate": "Abbrechen",
-    "backup": "Sicherungen"
+    "backup": "Sicherungen",
+    "myPapers": "Meine Größen",
+    "paperName": "Name der Größe",
+    "savePaper": "Als neue Größe speichern",
+    "renamePaper": "Umbenennen",
+    "deletePaper": "Löschen",
+    "paperNameError": "Geben Sie einen Namen für diese Größe ein.",
+    "paperNameTaken": "Eine gespeicherte Größe mit diesem Namen gibt es bereits.",
+    "paperStoreError": "Diese Größe konnte auf diesem Gerät nicht gespeichert werden."
   },
   "pt": {
     "title": "Etiquetas para casa",
@@ -585,7 +633,15 @@
     "offsetError": "Parte do conteúdo fica fora da página. Reduza o ajuste.",
     "newDate": "Nova data",
     "cancelDate": "Cancelar",
-    "backup": "Backups"
+    "backup": "Backups",
+    "myPapers": "Meus tamanhos",
+    "paperName": "Nome do tamanho",
+    "savePaper": "Salvar como novo tamanho",
+    "renamePaper": "Renomear",
+    "deletePaper": "Excluir",
+    "paperNameError": "Digite um nome para este tamanho.",
+    "paperNameTaken": "Já existe um tamanho salvo com esse nome.",
+    "paperStoreError": "Não foi possível salvar este tamanho neste dispositivo."
   },
   "ja": {
     "title": "家庭用ラベル",
@@ -669,7 +725,15 @@
     "offsetError": "ラベルの内容が用紙からはみ出しています。調整量を小さくしてください。",
     "newDate": "新しい日付",
     "cancelDate": "キャンセル",
-    "backup": "バックアップ"
+    "backup": "バックアップ",
+    "myPapers": "マイサイズ",
+    "paperName": "サイズ名",
+    "savePaper": "新しいサイズとして保存",
+    "renamePaper": "名前を変更",
+    "deletePaper": "削除",
+    "paperNameError": "このサイズの名前を入力してください。",
+    "paperNameTaken": "同じ名前の保存済みサイズがあります。",
+    "paperStoreError": "このデバイスにサイズを保存できませんでした。"
   },
   "ko": {
     "title": "가정용 라벨",
@@ -753,7 +817,15 @@
     "offsetError": "라벨 내용 일부가 용지를 벗어났습니다. 조정값을 줄이세요.",
     "newDate": "새 날짜",
     "cancelDate": "취소",
-    "backup": "백업"
+    "backup": "백업",
+    "myPapers": "내 크기",
+    "paperName": "크기 이름",
+    "savePaper": "새 크기로 저장",
+    "renamePaper": "이름 바꾸기",
+    "deletePaper": "삭제",
+    "paperNameError": "이 크기의 이름을 입력하세요.",
+    "paperNameTaken": "같은 이름의 저장된 크기가 이미 있습니다.",
+    "paperStoreError": "이 기기에 크기를 저장할 수 없습니다."
   },
   "it": {
     "title": "Etichette per la casa",
@@ -837,7 +909,15 @@
     "offsetError": "Parte del contenuto esce dalla pagina. Riduci lo spostamento.",
     "newDate": "Nuova data",
     "cancelDate": "Annulla",
-    "backup": "Backup"
+    "backup": "Backup",
+    "myPapers": "Le mie dimensioni",
+    "paperName": "Nome della dimensione",
+    "savePaper": "Salva come nuova dimensione",
+    "renamePaper": "Rinomina",
+    "deletePaper": "Elimina",
+    "paperNameError": "Inserisci un nome per questa dimensione.",
+    "paperNameTaken": "Esiste già una dimensione salvata con questo nome.",
+    "paperStoreError": "Impossibile salvare questa dimensione su questo dispositivo."
   },
   "ru": {
     "title": "Этикетки для дома",
@@ -921,7 +1001,15 @@
     "offsetError": "Часть содержимого выходит за пределы страницы. Уменьшите смещение.",
     "newDate": "Новая дата",
     "cancelDate": "Отмена",
-    "backup": "Резервные копии"
+    "backup": "Резервные копии",
+    "myPapers": "Мои размеры",
+    "paperName": "Название размера",
+    "savePaper": "Сохранить как новый размер",
+    "renamePaper": "Переименовать",
+    "deletePaper": "Удалить",
+    "paperNameError": "Введите название для этого размера.",
+    "paperNameTaken": "Сохранённый размер с таким названием уже есть.",
+    "paperStoreError": "Не удалось сохранить этот размер на этом устройстве."
   },
   "ar": {
     "title": "ملصقات المنزل",
@@ -1005,7 +1093,15 @@
     "offsetError": "بعض محتوى الملصقات خارج الصفحة. قلّل الإزاحة.",
     "newDate": "تاريخ جديد",
     "cancelDate": "إلغاء",
-    "backup": "النسخ الاحتياطية"
+    "backup": "النسخ الاحتياطية",
+    "myPapers": "مقاساتي",
+    "paperName": "اسم المقاس",
+    "savePaper": "حفظ كمقاس جديد",
+    "renamePaper": "إعادة تسمية",
+    "deletePaper": "حذف",
+    "paperNameError": "أدخل اسمًا لهذا المقاس.",
+    "paperNameTaken": "يوجد مقاس محفوظ بهذا الاسم بالفعل.",
+    "paperStoreError": "تعذّر حفظ هذا المقاس على هذا الجهاز."
   },
   "hi": {
     "title": "घर के लेबल",
@@ -1089,7 +1185,15 @@
     "offsetError": "लेबल का कुछ हिस्सा पृष्ठ से बाहर है। समायोजन कम करें।",
     "newDate": "नई तारीख",
     "cancelDate": "रद्द करें",
-    "backup": "बैकअप"
+    "backup": "बैकअप",
+    "myPapers": "मेरे आकार",
+    "paperName": "आकार का नाम",
+    "savePaper": "नए आकार के रूप में सहेजें",
+    "renamePaper": "नाम बदलें",
+    "deletePaper": "हटाएँ",
+    "paperNameError": "इस आकार के लिए एक नाम लिखें।",
+    "paperNameTaken": "इस नाम का सहेजा हुआ आकार पहले से है।",
+    "paperStoreError": "इस डिवाइस पर यह आकार सहेजा नहीं जा सका।"
   },
   "id": {
     "title": "Label rumah",
@@ -1173,7 +1277,15 @@
     "offsetError": "Sebagian isi label berada di luar halaman. Kurangi pergeseran.",
     "newDate": "Tanggal baru",
     "cancelDate": "Batal",
-    "backup": "Cadangan"
+    "backup": "Cadangan",
+    "myPapers": "Ukuran saya",
+    "paperName": "Nama ukuran",
+    "savePaper": "Simpan sebagai ukuran baru",
+    "renamePaper": "Ubah nama",
+    "deletePaper": "Hapus",
+    "paperNameError": "Masukkan nama untuk ukuran ini.",
+    "paperNameTaken": "Ukuran tersimpan dengan nama ini sudah ada.",
+    "paperStoreError": "Tidak dapat menyimpan ukuran ini di perangkat ini."
   },
   "tr": {
     "title": "Ev etiketleri",
@@ -1257,7 +1369,15 @@
     "offsetError": "Etiket içeriğinin bir kısmı sayfanın dışında. Kaydırmayı azaltın.",
     "newDate": "Yeni tarih",
     "cancelDate": "İptal",
-    "backup": "Yedekler"
+    "backup": "Yedekler",
+    "myPapers": "Boyutlarım",
+    "paperName": "Boyut adı",
+    "savePaper": "Yeni boyut olarak kaydet",
+    "renamePaper": "Yeniden adlandır",
+    "deletePaper": "Sil",
+    "paperNameError": "Bu boyut için bir ad girin.",
+    "paperNameTaken": "Bu adda kayıtlı bir boyut zaten var.",
+    "paperStoreError": "Bu boyut bu cihaza kaydedilemedi."
   },
   "vi": {
     "title": "Nhãn gia đình",
@@ -1341,7 +1461,15 @@
     "offsetError": "Một phần nội dung nhãn nằm ngoài trang. Hãy giảm độ dịch chuyển.",
     "newDate": "Ngày mới",
     "cancelDate": "Hủy",
-    "backup": "Bản sao lưu"
+    "backup": "Bản sao lưu",
+    "myPapers": "Kích thước của tôi",
+    "paperName": "Tên kích thước",
+    "savePaper": "Lưu thành kích thước mới",
+    "renamePaper": "Đổi tên",
+    "deletePaper": "Xóa",
+    "paperNameError": "Nhập tên cho kích thước này.",
+    "paperNameTaken": "Đã có kích thước được lưu với tên này.",
+    "paperStoreError": "Không thể lưu kích thước này trên thiết bị này."
   },
   "th": {
     "title": "ฉลากจัดบ้าน",
@@ -1425,7 +1553,15 @@
     "offsetError": "เนื้อหาฉลากบางส่วนอยู่นอกหน้ากระดาษ โปรดลดระยะปรับ",
     "newDate": "วันที่ใหม่",
     "cancelDate": "ยกเลิก",
-    "backup": "ข้อมูลสำรอง"
+    "backup": "ข้อมูลสำรอง",
+    "myPapers": "ขนาดของฉัน",
+    "paperName": "ชื่อขนาด",
+    "savePaper": "บันทึกเป็นขนาดใหม่",
+    "renamePaper": "เปลี่ยนชื่อ",
+    "deletePaper": "ลบ",
+    "paperNameError": "ใส่ชื่อสำหรับขนาดนี้",
+    "paperNameTaken": "มีขนาดที่บันทึกไว้ชื่อนี้อยู่แล้ว",
+    "paperStoreError": "ไม่สามารถบันทึกขนาดนี้บนอุปกรณ์นี้ได้"
   },
   "pl": {
     "title": "Etykiety do domu",
@@ -1509,7 +1645,15 @@
     "offsetError": "Część treści etykiet wychodzi poza stronę. Zmniejsz przesunięcie.",
     "newDate": "Nowa data",
     "cancelDate": "Anuluj",
-    "backup": "Kopie zapasowe"
+    "backup": "Kopie zapasowe",
+    "myPapers": "Moje rozmiary",
+    "paperName": "Nazwa rozmiaru",
+    "savePaper": "Zapisz jako nowy rozmiar",
+    "renamePaper": "Zmień nazwę",
+    "deletePaper": "Usuń",
+    "paperNameError": "Wpisz nazwę tego rozmiaru.",
+    "paperNameTaken": "Zapisany rozmiar o tej nazwie już istnieje.",
+    "paperStoreError": "Nie udało się zapisać tego rozmiaru na tym urządzeniu."
   },
   "nl": {
     "title": "Etiketten voor thuis",
@@ -1593,7 +1737,15 @@
     "offsetError": "Een deel van de etiketinhoud valt buiten de pagina. Verklein de verschuiving.",
     "newDate": "Nieuwe datum",
     "cancelDate": "Annuleren",
-    "backup": "Back-ups"
+    "backup": "Back-ups",
+    "myPapers": "Mijn maten",
+    "paperName": "Naam van de maat",
+    "savePaper": "Opslaan als nieuwe maat",
+    "renamePaper": "Hernoemen",
+    "deletePaper": "Verwijderen",
+    "paperNameError": "Geef deze maat een naam.",
+    "paperNameTaken": "Er bestaat al een opgeslagen maat met deze naam.",
+    "paperStoreError": "Deze maat kon niet op dit apparaat worden opgeslagen."
   },
   "uk": {
     "title": "Етикетки для дому",
@@ -1677,7 +1829,15 @@
     "offsetError": "Частина вмісту виходить за межі сторінки. Зменште зміщення.",
     "newDate": "Нова дата",
     "cancelDate": "Скасувати",
-    "backup": "Резервні копії"
+    "backup": "Резервні копії",
+    "myPapers": "Мої розміри",
+    "paperName": "Назва розміру",
+    "savePaper": "Зберегти як новий розмір",
+    "renamePaper": "Перейменувати",
+    "deletePaper": "Видалити",
+    "paperNameError": "Введіть назву для цього розміру.",
+    "paperNameTaken": "Збережений розмір із такою назвою вже є.",
+    "paperStoreError": "Не вдалося зберегти цей розмір на цьому пристрої."
   },
   "ms": {
     "title": "Label rumah",
@@ -1761,7 +1921,15 @@
     "offsetError": "Sebahagian kandungan label berada di luar halaman. Kurangkan anjakan.",
     "newDate": "Tarikh baharu",
     "cancelDate": "Batal",
-    "backup": "Sandaran"
+    "backup": "Sandaran",
+    "myPapers": "Saiz saya",
+    "paperName": "Nama saiz",
+    "savePaper": "Simpan sebagai saiz baharu",
+    "renamePaper": "Namakan semula",
+    "deletePaper": "Padam",
+    "paperNameError": "Masukkan nama untuk saiz ini.",
+    "paperNameTaken": "Saiz tersimpan dengan nama ini sudah wujud.",
+    "paperStoreError": "Tidak dapat menyimpan saiz ini pada peranti ini."
   },
   "bn": {
     "title": "বাড়ির লেবেল",
@@ -1845,7 +2013,15 @@
     "offsetError": "লেবেলের কিছু অংশ পৃষ্ঠার বাইরে রয়েছে। সরানোর পরিমাণ কমান।",
     "newDate": "নতুন তারিখ",
     "cancelDate": "বাতিল",
-    "backup": "ব্যাকআপ"
+    "backup": "ব্যাকআপ",
+    "myPapers": "আমার মাপ",
+    "paperName": "মাপের নাম",
+    "savePaper": "নতুন মাপ হিসেবে সংরক্ষণ",
+    "renamePaper": "নাম বদলান",
+    "deletePaper": "মুছুন",
+    "paperNameError": "এই মাপের জন্য একটি নাম লিখুন।",
+    "paperNameTaken": "এই নামে একটি সংরক্ষিত মাপ ইতিমধ্যে আছে।",
+    "paperStoreError": "এই ডিভাইসে মাপটি সংরক্ষণ করা যায়নি।"
   },
   "fa": {
     "title": "برچسب‌های خانه",
@@ -1929,7 +2105,15 @@
     "offsetError": "بخشی از محتوای برچسب بیرون صفحه است. میزان جابه‌جایی را کاهش دهید.",
     "newDate": "تاریخ جدید",
     "cancelDate": "لغو",
-    "backup": "پشتیبان‌ها"
+    "backup": "پشتیبان‌ها",
+    "myPapers": "اندازه‌های من",
+    "paperName": "نام اندازه",
+    "savePaper": "ذخیره به‌عنوان اندازه جدید",
+    "renamePaper": "تغییر نام",
+    "deletePaper": "حذف",
+    "paperNameError": "برای این اندازه نامی وارد کنید.",
+    "paperNameTaken": "اندازه ذخیره‌شده‌ای با این نام از قبل وجود دارد.",
+    "paperStoreError": "ذخیره این اندازه در این دستگاه ممکن نشد."
   },
   "he": {
     "title": "תוויות לבית",
@@ -2013,6 +2197,14 @@
     "offsetError": "חלק מתוכן התווית נמצא מחוץ לדף. הקטינו את ההזזה.",
     "newDate": "תאריך חדש",
     "cancelDate": "ביטול",
-    "backup": "גיבויים"
+    "backup": "גיבויים",
+    "myPapers": "הגדלים שלי",
+    "paperName": "שם הגודל",
+    "savePaper": "שמירה כגודל חדש",
+    "renamePaper": "שינוי שם",
+    "deletePaper": "מחיקה",
+    "paperNameError": "הזינו שם לגודל הזה.",
+    "paperNameTaken": "כבר קיים גודל שמור בשם הזה.",
+    "paperStoreError": "לא ניתן לשמור את הגודל הזה במכשיר הזה."
   }
 }

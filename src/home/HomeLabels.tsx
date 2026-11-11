@@ -37,6 +37,18 @@ import { useScreenPreview } from "./ScreenPreview";
 import { countryForTimeZone, regionChoices, regionCodes } from "./regional";
 import { usePairing, restoredPair, type PairRequest } from "./pairing";
 import { PairPanel } from "./PairPanel";
+import {
+  customPapersFor,
+  saveCustomPaper,
+  updateCustomPaper,
+  removeCustomPaper,
+  CustomPaperError,
+  type CustomPaper,
+} from "../core/customPapers";
+// A kept size is selected through the paper id it stamps on the project, so
+// the choice survives reloads and backups the same way the built-in ids do.
+const SAVED_PAPER = "saved:";
+const savedPaperId = (p: { id: string }) => SAVED_PAPER + p.id;
 const REGION_STORE = "barcodemate.home.region.v1";
 const STORE = "barcodemate.home.v1";
 const languageName = (code: string) => {
@@ -72,6 +84,12 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
     }
   }, []);
   const [detectedRegion, setDetectedRegion] = useState("");
+  const [savedPapers, setSavedPapers] = useState<CustomPaper<Paper>[]>(() =>
+    customPapersFor<Paper>("home"),
+  );
+  const reloadSavedPapers = () =>
+    setSavedPapers(customPapersFor<Paper>("home"));
+  const [paperName, setPaperName] = useState("");
   const [project, setProject] = useState<HomeProject>(() => {
     const paired = restoredPair();
     if (paired) return paired.draft;
@@ -79,6 +97,12 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
     try {
       const value = localStorage.getItem(STORE);
       if (value) saved = validateHome(JSON.parse(value));
+      // A kept size that was deleted since leaves its dimensions, as custom.
+      if (
+        saved?.paper.id.startsWith(SAVED_PAPER) &&
+        !savedPapers.some((p) => savedPaperId(p) === saved!.paper.id)
+      )
+        saved.paper = { ...saved.paper, id: "custom", name: t("custom") };
     } catch {}
     let region = saved?.region || "";
     regionLocked.current = !!region;
@@ -704,11 +728,69 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
   const displayRegions = new Intl.DisplayNames([language], { type: "region" });
   const selectPaper = (id: string) => {
     const p = papers.find((p) => p.id === id);
+    const saved = savedPapers.find((s) => savedPaperId(s) === id);
+    if (saved) {
+      try {
+        patch({
+          paper: {
+            ...validPaper(structuredClone(saved.paper)),
+            id,
+            name: saved.name,
+          },
+        });
+      } catch {
+        setNotice(t("error"));
+      }
+      return;
+    }
     patch({
       paper: p
         ? structuredClone(p)
         : { ...project.paper, id: "custom", name: t("custom") },
     });
+  };
+  const selectedSaved = savedPapers.find(
+    (s) => savedPaperId(s) === project.paper.id,
+  );
+  const paperFailure = (e: unknown) =>
+    setNotice(t(e instanceof CustomPaperError ? e.key : "error"));
+  const savePaper = () => {
+    try {
+      const saved = saveCustomPaper<Paper>({
+        name: paperName,
+        tab: "home",
+        paper: validPaper({ ...project.paper, id: "custom" }),
+      });
+      reloadSavedPapers();
+      setPaperName("");
+      setNotice("");
+      patch({ paper: { ...project.paper, id: savedPaperId(saved), name: saved.name } });
+    } catch (e) {
+      paperFailure(e);
+    }
+  };
+  const renamePaper = () => {
+    if (!selectedSaved) return;
+    try {
+      const renamed = updateCustomPaper(selectedSaved.id, { name: paperName });
+      reloadSavedPapers();
+      setPaperName("");
+      setNotice("");
+      if (renamed) patch({ paper: { ...project.paper, name: renamed.name } });
+    } catch (e) {
+      paperFailure(e);
+    }
+  };
+  const deletePaper = () => {
+    if (!selectedSaved) return;
+    try {
+      removeCustomPaper(selectedSaved.id);
+      reloadSavedPapers();
+      setNotice("");
+      patch({ paper: { ...project.paper, id: "custom", name: t("custom") } });
+    } catch (e) {
+      paperFailure(e);
+    }
   };
   return (
     <div
@@ -766,7 +848,10 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
                 if (f.size > 1000000) throw Error();
                 const loaded = validateHome(JSON.parse(await f.text()));
                 regionLocked.current = true;
-                if (!papers.some((p) => p.id === loaded.paper.id))
+                if (
+                  !papers.some((p) => p.id === loaded.paper.id) &&
+                  !savedPapers.some((p) => savedPaperId(p) === loaded.paper.id)
+                )
                   loaded.paper.id = "custom";
                 change(activateLabelSet(loaded, loaded.outputLanguage, loaded.activeGroup ?? group));
               } catch {
@@ -1130,6 +1215,15 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
                       {p.name}
                     </option>
                   ))}
+                  {savedPapers.length > 0 && (
+                    <optgroup label={t("myPapers")}>
+                      {savedPapers.map((p) => (
+                        <option key={p.id} value={savedPaperId(p)}>
+                          {p.name} · {p.paper.width} × {p.paper.height} mm
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
                   <option value="custom">{t("custom")}</option>
                 </select>
               </label>
@@ -1148,7 +1242,7 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
               </button>
             </div>
             <p className="hm-hint">{t("allNote")}</p>
-            <details open={project.paper.id === "custom"}>
+            <details open={project.paper.id === "custom" || !!selectedSaved}>
               <summary>{t("custom")} · mm</summary>
               <div className="hm-fields">
                 <label>
@@ -1256,6 +1350,34 @@ export function HomeLabels({ language, onPrint, onSave, voiceAPI, pairingAPI }: 
                     <option value="round">{t("round")}</option>
                   </select>
                 </label>
+              </div>
+              <div className="hm-custom-papers" data-testid="home-custom-papers">
+                <label>
+                  {t("paperName")}
+                  <input
+                    type="text"
+                    data-testid="home-paper-name"
+                    maxLength={60}
+                    value={paperName}
+                    placeholder={selectedSaved?.name}
+                    onChange={(e) => setPaperName(e.target.value)}
+                  />
+                </label>
+                <div className="hm-custom-paper-actions">
+                  <button type="button" onClick={savePaper}>
+                    {t("savePaper")}
+                  </button>
+                  {selectedSaved && (
+                    <>
+                      <button type="button" onClick={renamePaper}>
+                        {t("renamePaper")}
+                      </button>
+                      <button type="button" onClick={deletePaper}>
+                        {t("deletePaper")}
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </details>
             <p className="hm-hint">{t("layoutNote")}</p>

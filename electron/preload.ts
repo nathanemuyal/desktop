@@ -32,6 +32,8 @@ contextBridge.exposeInMainWorld("desktop", {
   saveProject: (p: unknown) => ipcRenderer.invoke("project:save", p),
   loadLibrary: () => ipcRenderer.invoke("library:load"),
   saveLibrary: (p: unknown) => ipcRenderer.invoke("library:save", p),
+  loadPapers: () => ipcRenderer.invoke("papers:load"),
+  savePapers: (p: unknown) => ipcRenderer.invoke("papers:save", p),
   recover: () => ipcRenderer.invoke("recover"),
   autosave: (p: unknown) => ipcRenderer.invoke("autosave", p),
   importTable: () => ipcRenderer.invoke("table:import"),
